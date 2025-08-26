@@ -55,6 +55,12 @@ const Images = () => {
     setFile(null);
   };
 
+  const handleDelete = (id: string) => {
+    if (window.confirm("Haqiqatan ham o‘chirilsinmi?")) {
+      setData((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
       <form
@@ -98,6 +104,7 @@ const Images = () => {
           name=""
           id=""
           accept="image/"
+          required
           onChange={handleFilechange}
           className="w-full cursor-pointer bg-gray-300 text-gray-700 py-2 px-2 rounded-md "
         />
@@ -117,15 +124,39 @@ const Images = () => {
             className="bg-white p-4 rounded-xl shadow flex justify-between items-center"
           >
             <div className="mx-10">
-                <h1 className="font-bold py-2 text-2xl text-blue-900">My Profile</h1>
-              <div >
-                <img src={item.file} alt={item.name} className="w-[250px] h-[250px] rounded-[50%] object-cover"/>
+              <h1 className="font-bold py-2 text-2xl text-blue-900">
+                My Profile
+              </h1>
+              <div>
+                <img
+                  src={item.file}
+                  alt={item.name}
+                  className="w-[250px] h-[250px] rounded-2xl object-cover"
+                />
               </div>
               <div>
-                <div className="my-3">
-                  <h1 className="font-bold text-lg text-blue-900"><span className="text-gray-600">name: </span> {item.name}</h1>
-                  <p className="font-bold text-lg text-blue-900"><span className="text-gray-600">age: </span> {item.age || "-"}</p>
-                  <p className="font-bold text-lg text-blue-900"><span className="text-gray-600">gender: </span> {item.gender}</p>
+                <div className="my-3 flex gap-5">
+                  <div>
+                    <h1 className="font-bold text-lg text-blue-900">
+                      <span className="text-gray-600">name: </span> {item.name}
+                    </h1>
+                    <p className="font-bold text-lg text-blue-900">
+                      <span className="text-gray-600">age: </span>{" "}
+                      {item.age || "-"}
+                    </p>
+                    <p className="font-bold text-lg text-blue-900">
+                      <span className="text-gray-600">gender: </span>{" "}
+                      {item.gender}
+                    </p>
+                  </div>
+                  <div className="mt-10">
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="bg-red-600 border-0 hover:bg-red-500 cursor-pointer rounded-md text-white font-bold px-3 py-1 my-2"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
                 <span className="text-sm text-gray-400">
                   #{item.id.slice(0, 5)}

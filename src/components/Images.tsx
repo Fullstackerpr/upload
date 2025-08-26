@@ -1,4 +1,4 @@
-import React, { memo, useState, type FormEvent } from "react";
+import React, { memo, useEffect, useState, type FormEvent } from "react";
 import { v4 as uuid } from "uuid";
 
 type User = {
@@ -22,6 +22,15 @@ const Images = () => {
   const [data, setData] = useState<User[]>([]);
   const [_file, setFile] = useState<File | null>(null);
 
+  useEffect(() => {
+    // Refreshdan keyin data va file ni olish
+    const savedData = localStorage.getItem("usersData");
+    if (savedData) setData(JSON.parse(savedData));
+
+    const savedFormFile = localStorage.getItem("myImage");
+    if (savedFormFile) setForm((prev) => ({ ...prev, file: savedFormFile }));
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -33,11 +42,13 @@ const Images = () => {
 
   const handleFilechange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const fileUrl = URL.createObjectURL(e.target.files[0]);
       setFile(e.target.files[0]);
       setForm({
         ...form,
-        file: URL.createObjectURL(e.target.files[0]),
+        file: fileUrl,
       });
+      localStorage.setItem("myImage", fileUrl); // file ni saqlash
     }
   };
 
@@ -50,7 +61,10 @@ const Images = () => {
       age: Number(form.age),
     };
 
-    setData((prev) => [...prev, newUser]);
+    const updatedData = [...data, newUser];
+    setData(updatedData);
+    localStorage.setItem("usersData", JSON.stringify(updatedData)); // data ni saqlash
+
     setForm(initialState);
     setFile(null);
   };
